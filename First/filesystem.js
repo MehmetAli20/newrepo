@@ -1,19 +1,35 @@
-const { isUtf8 } = require('buffer');
-const fs = require('fs');
+const { log } = require('console');
+const {readFile} = require('fs');
+const { reject, get, result } = require('lodash');
+const { resolve } = require('path');
 
-
-const first= fs.readFileSync('./first.txt','utf8');
-const second=fs.readFileSync('./second.txt','utf8');
-
-console.log(first+'---'+second);
-
-fs.writeFile ('newTXT.txt',`this is written by writeFile module. ${first},${second}`,(err,result)=>{
-     if(err){
-        console.log(err);
-        return;
-        }
-        console.log(result);
+const getText=(path)=>{
+    return new Promise((resolve,reject)=>{
+        readFile(path,'utf8',(err,data)=>{
+    if(err){
+        reject(err)
     }
-   
+    else{
+        resolve(data)
+    }
+})
+    })
+}
 
-    )
+const start=async()=>{
+    try {
+        const first=await getText('first.txt');
+        const second=await getText('second.txt');
+        console.log(first+'--- '+second);
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+start();
+
+
+/* getText('../Aworkingarea/gibberish.txt')
+.then((result)=>console.log(result))
+.catch((reject)=>console.log(err))
+ */
